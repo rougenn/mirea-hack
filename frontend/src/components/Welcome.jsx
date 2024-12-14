@@ -13,7 +13,7 @@ export default function Welcome() {
     }
     return (
         <div className="container">
-            <img src="/icon.svg" alt="Logo" className="logo" />
+            <img src="/assets/icon.svg" alt="Logo" className="logo" />
             <button className="btn-log" onClick={handleLogin}>Вход</button>
             <button className="btn-reg" onClick={handleRegister}>Регистрация</button>
             <button className="btn-guest" onClick={HandleGuest}>Войти как гость</button>

@@ -143,7 +143,7 @@ export default function MainPage() {
                 className="toggle-side-panel-button"
                 onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
             >
-                <img src="./basebtn.png" alt="Toggle Side Panel" />
+                <img src="/assets/basebtn.png" alt="Toggle Side Panel" />
             </button>
             <SidePanel
                 isOpen={isSidePanelOpen}

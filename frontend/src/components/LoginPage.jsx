@@ -37,7 +37,7 @@ export default function LoginPage() {
     return (
         <div className="container">
             <div className="form-container">
-                <img src="/icon.svg" alt="Logo" className="logo" />
+                <img src="/assets/icon.svg" alt="Logo" className="logo" />
 
                 <input 
                     type="text" 

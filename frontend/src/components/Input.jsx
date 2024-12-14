@@ -161,7 +161,7 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                 className="toggle-side-panel-button"
                 onClick={() => setIsSidePanelOpen(true)}
             >
-                <img src="./basebtn.png" alt="Open Side Panel" />
+                <img src="/assets/basebtn.png" alt="Open Side Panel" />
             </button>
 
             {!isSidePanelOpen && (
@@ -209,7 +209,7 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                                 className="export-button"
                                 onClick={() => openExportModal(row.id)}
                             >
-                                <img src="./exportbtn.png" alt="Export" />
+                                <img src="/assets/exportbtn.png" alt="Export" />
                             </button>
                         </div>
                     ))}
@@ -218,13 +218,13 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                         className="toggle-panel-button"
                         onClick={() => setIsPanelOpen(!isPanelOpen)}
                     >
-                        <img src="./keyboardbtn.png" alt="Open Math Panel" />
+                        <img src="/assets/keyboardbtn.png" alt="Open Math Panel" />
                     </button>
 
                     {isPanelOpen && <MathPanel onInsert={handleInsertSymbol} />}
 
                     <button onClick={addRow} className="add-button">
-                        <img src="./Plus_circle.svg" alt="add-btn" />
+                        <img src="/assets/Plus_circle.svg" alt="add-btn" />
                     </button>
 
                     <ComparisonModal

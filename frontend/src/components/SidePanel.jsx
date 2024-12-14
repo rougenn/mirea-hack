@@ -59,7 +59,7 @@ const SidePanel = ({
                 ))}
 
                 <button className="close-button" onClick={onClose}>
-                    <img src="./backbtn.png" alt="Close Side Panel" />
+                    <img src="/assets/backbtn.png" alt="Close Side Panel" />
                 </button>
             </div>
         </div>

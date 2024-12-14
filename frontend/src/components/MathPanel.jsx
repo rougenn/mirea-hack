@@ -51,7 +51,7 @@ const MathPanel = ({ onInsert }) => {
                 className="toggle-panel-button"
                 onClick={() => setIsPanelOpen(!isPanelOpen)}
             >
-                <img src="/keyboardbtn.png" alt="Math Panel" />
+                <img src="/assets/keyboardbtn.png" alt="Math Panel" />
             </button>
 
             {isPanelOpen && (
