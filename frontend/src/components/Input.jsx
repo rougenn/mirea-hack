@@ -6,7 +6,7 @@ import MathPanel from './MathPanel';
 import ComparisonModal from './ComparisonModal';
 import { toPng } from 'html-to-image';
 import { saveAs } from 'file-saver';
-import { Document, Packer, Paragraph, MathRun } from 'docx';
+import JSZip from 'jszip';
 
 const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
     const [rows, setRows] = useState([{ id: 1, inputText: '' }]);
@@ -68,22 +68,72 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
         setExportModalOpen(false);
     };
 
-    const handleExportDocx = (text) => {
-        const doc = new Document({
-            sections: [
-                {
-                    children: [
-                        new Paragraph({
-                            children: [new MathRun(text)], // MathRun создает формулу для Word
-                        }),
-                    ],
-                },
-            ],
-        });
+    // Экспорт DOCX с текстом и формулой √x
+    const handleExportDocx = async () => {
+        const zip = new JSZip();
 
-        Packer.toBlob(doc).then((blob) => {
-            saveAs(blob, `formula_${new Date().toISOString()}.docx`);
-        });
+        // OMML для формулы √x
+        const omml = `
+<m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">
+  <m:oMath>
+    <m:rad>
+      <m:radPr><m:degHide m:val="1"/></m:radPr>
+      <m:deg>
+        <m:r>
+          <m:t>x</m:t>
+        </m:r>
+      </m:deg>
+      <m:e>
+        <m:r>
+          <m:t></m:t>
+        </m:r>
+      </m:e>
+    </m:rad>
+  </m:oMath>
+</m:oMathPara>
+`;
+
+        const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`;
+
+        const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1"
+    Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument"
+    Target="word/document.xml"/>
+</Relationships>`;
+
+        const documentXML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+            xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">
+  <w:body>
+    <w:p>
+      <w:r>
+        <w:t>This is a formula:</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:r>
+        ${omml}
+      </w:r>
+    </w:p>
+    <w:sectPr>
+      <w:pgSz w:w="12240" w:h="15840"/>
+      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/>
+    </w:sectPr>
+  </w:body>
+</w:document>`;
+
+        zip.file("[Content_Types].xml", contentTypes);
+        zip.folder("_rels").file(".rels", rels);
+        zip.folder("word").file("document.xml", documentXML);
+
+        const blob = await zip.generateAsync({ type: "blob" });
+        saveAs(blob, `formula_${new Date().toISOString()}.docx`);
         setExportModalOpen(false);
     };
 
@@ -223,11 +273,7 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                         Экспортировать как TXT
                     </button>
                     <button
-                        onClick={() =>
-                            handleExportDocx(
-                                rows.find((row) => row.id === exportRowId)?.inputText || ''
-                            )
-                        }
+                        onClick={() => handleExportDocx()}
                     >
                         Экспортировать как DOCX
                     </button>
