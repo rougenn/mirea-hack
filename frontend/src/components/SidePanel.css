@@ -1,3 +1,4 @@
+/* Основной стиль боковой панели */
 .side-panel {
     position: fixed;
     top: 0;
@@ -5,10 +6,10 @@
     width: 700px;
     height: 100%;
     background-color: #ffffff; /* Белый фон панели */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    transition: left 0.3s ease-in-out;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3); /* Лёгкая тень */
+    transition: left 0.4s ease-in-out; /* Плавное появление */
     z-index: 1000;
-    overflow-y: auto; /* Добавляем прокрутку, если контента много */
+    overflow-y: auto; /* Добавляем прокрутку для длинного контента */
 }
 
 .side-panel.open {
@@ -19,10 +20,57 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Выравниваем по левому краю */
+    align-items: flex-start; /* Выравнивание контента по левому краю */
     gap: 20px; /* Расстояние между элементами */
 }
 
+/* Кнопка создания базы */
+button {
+    padding: 10px 20px;
+    background-color: #007bff; /* Синий фон кнопки */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* Темно-синий при наведении */
+    transform: scale(1.03); /* Легкое увеличение при наведении */
+}
+
+/* Выпадающий список выбора базы */
+.base-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.base-selector label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff; /* Тёмно-серый текст */
+}
+
+.base-selector select {
+    width: 20%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    background-color: #007bff;
+    transition: border-color 0.3s ease;
+}
+
+.base-selector select:focus {
+    border-color: #007bff; /* Синий акцент при фокусе */
+    outline: none;
+}
+
+/* Плашки с формулами */
 .formula-item {
     position: relative;
     cursor: pointer;
@@ -30,45 +78,58 @@
     background: linear-gradient(180deg, #003BFF 0%, #688BFF 100%); /* Сине-голубой градиент */
     border-radius: 10px; /* Закругленные углы */
     padding: 15px; /* Отступы внутри плашки */
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Умеренная тень */
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
+.formula-item:hover {
+    transform: translateY(-3px); /* Легкое поднятие плашки при наведении */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); /* Увеличение тени при наведении */
+}
+
+/* Текст формулы */
 .formula-title {
-    font-family: 'Arial';
+    font-family: 'Arial', sans-serif;
     font-style: normal;
-    font-weight: 350;
+    font-weight: 500;
     font-size: 24px;
     line-height: 37px;
-    color: #FFFFFF; /* Белый цвет текста */
+    color: #FFFFFF; /* Белый текст */
 }
 
 .formula-body {
-    margin-top: 0px;
-    font-family: 'Arial';
+    margin-top: 8px;
+    font-family: 'Arial', sans-serif;
     font-style: normal;
-    font-weight: 350;
+    font-weight: 400;
     font-size: 18px;
     line-height: 27px;
-    margin-left: 10px;
-    color: #FFFFFF; /* Белый цвет текста */
+    color: #FFFFFF; /* Белый текст */
 }
 
+/* Кнопка закрытия панели */
 .close-button {
     margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff00;
-    color: white;
+    padding: 10px;
+    background-color: transparent; /* Прозрачный фон */
     border: none;
     cursor: pointer;
-    align-self: flex-end;   
+    align-self: flex-end;
     border-radius: 50%; 
+    transition: transform 0.3s ease;
 }
 
-/* .close-button:hover {
-    
-} */
+.close-button img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease;
+}
 
-/* Кнопка для открытия/закрытия панели (картинка) */
+.close-button:hover img {
+    transform: rotate(180deg); /* Вращение при наведении */
+}
+
+/* Кнопка для открытия панели */
 .toggle-side-panel-button {
     width: 110px;
     height: 60px;
@@ -84,3 +145,9 @@
     height: 70px;
     object-fit: contain; /* Масштабирование изображения */
 }
+
+/* Анимации наведения для кнопок */
+button:active {
+    transform: scale(0.98); /* Лёгкий "клик" при нажатии */
+}
+
