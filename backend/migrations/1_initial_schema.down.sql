@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS formula_dbs;
+
+DROP TABLE IF EXISTS users;
+
+DROP TABLE IF EXISTS formulas;
