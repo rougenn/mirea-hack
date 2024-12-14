@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 export default function RegisterPage() {
     const navigate = useNavigate()
     const handleRegister = () => {
-        navigate('/home')
+        navigate('/')
     }
     return (
         <div className="container">

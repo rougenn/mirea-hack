@@ -13,11 +13,13 @@
     "docx": "^9.1.0",
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.11",
+    "jszip": "^3.10.1",
     "katex": "^0.16.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-latex-next": "^3.0.0",
     "react-mathjax2": "^0.0.2",
+    "react-mathquill": "^1.0.3",
     "react-router-dom": "^7.0.2",
     "react-sketch-canvas": "^6.2.0"
   },
