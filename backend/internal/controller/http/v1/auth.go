@@ -51,7 +51,7 @@ func (r *Uc) LogIn(ctx *gin.Context) {
 
 	user, err := r.uc.SignIn(req.Email, req.Password)
 	if err != nil {
-		if errors.Is(err, ErrIncorrectData) {
+		if errors.Is(err, usecase.ErrIncorrectData) {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}

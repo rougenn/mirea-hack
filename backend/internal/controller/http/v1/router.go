@@ -10,33 +10,40 @@ import (
 )
 
 func NewRouter(handler *gin.Engine, uc usecase.User, ac usecase.FormulaApi) {
-	// Options
+	// Middleware
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
 
 	// K8s probe
-	handler.GET("/healthz", func(c *gin.Context) { c.Status(http.StatusOK) })
+	handler.GET("/healthz", func(c *gin.Context) {
+		c.Status(http.StatusOK)
+	})
 
 	r := New(uc, ac)
+
 	handler.POST("/api/user/login", r.LogIn)
 	handler.POST("/api/user/signup", r.Register)
 	handler.POST("/api/user/refresh-token", RefreshToken)
-
-	// Prometheus metrics
-	handler.GET("/metrics", gin.WrapH(promhttp.Handler()))
-
 	handler.POST("/api/refresh-token", RefreshToken)
 
-	// Routers
+	handler.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
 	protected := handler.Group("/api")
-	protected.Use(jwt.AuthMiddleware())
+	{
+		protected.Use(jwt.AuthMiddleware())
+		protected.GET("/formula-db/list", r.GetFormulaDBList)
+		protected.POST("/compare/with-db")
+		protected.POST("/compare/with-formula")
+		protected.PUT("/formula-db/new", r.CreateFormulaDB)
+		protected.GET("/formula-db")
+	}
 
-	protected.GET("/formula-db/list", r.GetFormulaDBList) // получаем список всех дб юзера
-
-	protected.POST("/compare/with-db")      // сравнение с какой то дб юзера
-	protected.POST("/compare/with-formula") // сравнение с формулой
-
-	protected.PUT("/formula-db/new", r.CreateFormulaDB) // создаем новую дб для юзера
-	protected.GET("/formula-db")                        // получаем какую-то дб (думаю можно обойтись без нее)
+	handler.Static("/assets", "./frontend/dist/assets")
+	handler.GET("/", func(c *gin.Context) {
+		c.File("./frontend/dist/index.html")
+	})
+	handler.NoRoute(func(c *gin.Context) {
+		c.File("./frontend/dist/index.html")
+	})
 
 }
