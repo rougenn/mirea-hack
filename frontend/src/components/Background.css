@@ -1,0 +1,12 @@
+body {
+    background-color: #FFFFFF; 
+}
+.divider {
+    position: absolute;
+    width: 1px;
+    height: 100vh;
+    margin-left: 600px;
+    top: 0;
+    background: #E0E0E0; /* Светло-серая разделительная линия */
+}
+

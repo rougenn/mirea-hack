@@ -1,0 +1,49 @@
+/* Кнопка открытия панели */
+.toggle-panel-button {
+    position: fixed; /* Кнопка фиксирована на экране */
+    bottom: 20px; /* Отступ снизу */
+    left: 40px;
+    width: 100px; /* Размер кнопки */
+    height: 60px;
+    background: none; /* Убираем стандартный фон */
+    border: none; /* Убираем рамку */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Поверх других элементов */
+}
+
+.toggle-panel-button img {
+    width: 110px; /* Картинка полнxостью заполняет кнопку */ 
+}
+
+/* Панель символов */
+.math-panel {
+    position: fixed; /* Панель фиксирована на экране */
+    bottom: 100px; /* Располагаем над кнопкой */;
+    width: 400px; /* Ширина панели */
+    background: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Тень */
+    border-radius: 8px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Сетка с 4 столбцами */
+    gap: 10px;
+    z-index: 1001; /* Выше кнопки */
+}
+
+/* Символы в панели */
+.math-symbol {
+    padding: 10px;
+    font-size: 16px;
+    background: linear-gradient(180deg, #003BFF 0%, #192D6D 100%);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.math-symbol:hover {
+    background-color: #e0e0e0;
+}

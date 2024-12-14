@@ -1,0 +1,183 @@
+.dynamic-inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    padding-bottom: 60px;
+    margin-bottom: 150px;
+}
+
+.row-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    position: relative; /* Для позиционирования кнопки экспорта */
+}
+
+.row-container:first-child {
+    margin-top: px; /* Уменьшен отступ сверху для первого инпута */
+}
+
+.input-section {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 577px;
+    height: 110px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    margin-left: 8px;
+}
+
+.gradient-bar {
+    width: 60.48px;
+    height: 100%;
+    background: linear-gradient(180deg, #003BFF 0%, #192D6D 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number {
+    font-family: 'ABeeZee', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 28px;
+    color: #FFFFFF;
+}
+
+.text-input {
+    flex-grow: 1;
+    height: 70%;
+    border: none;
+    outline: none;
+    font-size: 28px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    color: #999;
+    font-family: 'ABeeZee', sans-serif;
+    background-color: #fff;
+}
+
+.text-input::placeholder {
+    color: #999;
+    font-style: italic;
+    font-size: 24px;
+}
+
+.output-section {
+    margin-left: 10px;
+    font-size: 24px;
+    font-family: 'ABeeZee', sans-serif;
+    color: #2b2828;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    max-height: 110px;
+    overflow-y: auto;
+    border: 1px solid #ffffff;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Перенос слов */
+    white-space: pre-wrap; /* Учитываем переносы строки */
+}
+
+.output-number {
+    position: relative;
+    font-family: 'ABeeZee', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #999;
+}
+
+.latex-output {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.export-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: absolute; /* Позиционируем кнопку экспорта */
+    right: -60px; /* Располагаем справа */
+    top: 65%; /* Центрируем по вертикали */
+    transform: translateY(-50%); /* Центрируем по вертикали */
+}
+
+.export-button img {
+    width: 60px; /* Размер изображения */
+    height: 60px;
+    object-fit: contain;
+}
+
+.toggle-side-panel-button {
+    position: fixed; /* Фиксируем кнопку */
+    bottom: 22.5px;
+    left: 200px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 1000; /* Поверх всех элементов */
+}
+
+.toggle-side-panel-button img {
+    width: 160px; /* Размер изображения */
+    height: 70px;
+    object-fit: contain; /* Масштабирование изображения */
+}
+
+.add-button {
+    position: fixed; /* Фиксируем кнопку */
+    bottom: 20px;
+    margin-left: 250px;
+    margin-bottom: 200px;
+    width: 60px; /* Размер кнопки */
+    height: 60px;
+    background-color: transparent; /* Прозрачный фон */
+    border: none;
+    cursor: pointer;
+    z-index: 1000; /* Поверх всех элементов */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-button img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain; /* Масштабирование изображения */
+}
+
+.fixed-compare-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(180deg, #003BFF 0%, #192D6D 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1000;
+}
+
+.fixed-compare-button:hover {
+    background-color: #0056b3;
+}
+
+.remove-row-button {
+    color:#a50000;
+    font-size: 20px;
+    background-color: #fff;
+}

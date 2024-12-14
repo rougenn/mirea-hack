@@ -1,0 +1,104 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 1920px;; /* Use percentage for responsive layout */
+    background-color: #fff;
+}
+
+/* Logo styling */
+.logo {
+    width: 100px;
+    margin-bottom: 120px;
+}
+
+/* Button styling */
+
+/* Вход button */
+.btn-log {
+    width: 348px;
+    height: 69px;
+    background: linear-gradient(180deg, #003BFF 0%, #192D6D 100%);
+    border-radius: 40px;
+    font-family: 'Cygre ExtraBold';
+    font-weight: 800;
+    font-size: 24px;
+    color: #FFFFFF;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.btn-log:hover {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, #002F89 0%, #15264D 100%);
+}
+
+/* Регистрация button */
+.btn-reg {
+    width: 348px;
+    height: 69px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    font-family: 'Cygre ExtraBold';
+    font-weight: 800;
+    font-size: 24px;
+    color: #003BFF;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    margin-left: 0px;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.btn-reg:hover {
+    transform: scale(1.05);
+    background: #003BFF;
+    color: white;
+}
+
+/* Войти как гость button */
+.btn-guest {
+    width: 348px;
+    height: 69px;
+    background: #918e8e00;
+    border-radius: 40px;
+    font-family: 'Cygre Medium';
+    font-weight: 500;
+    font-size: 24px;
+    color: hsl(0, 0%, 77%);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.btn-guest:hover {
+    transform: scale(1.05);
+    background: #6c6868; /* Darker color on hover */
+}
+
+.btn-guest:active {
+    background: #4e4a4a; /* Slightly darker on click */
+}
+
+/* Line */
+.line {
+    width: 160px;
+    height: 0;
+    border: 1px solid hsl(0, 0%, 77%);
+}   

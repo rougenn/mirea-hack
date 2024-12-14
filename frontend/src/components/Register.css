@@ -1,0 +1,71 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 1920px; /* Use full width instead of fixed 1920px */
+    background-color: #fff;
+}
+
+/* Form container styling */
+.form-container {
+    text-align: center;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #fff;
+    width: 500px; /* Adjust the width to a reasonable size */
+    position: relative; /* Keep the button positioning relative to this container */
+}
+
+/* Logo styling */
+.logo {
+    width: 100px; /* Adjust the size of the logo */
+    height: 188px;
+    margin-bottom: 70px; /* Adjust the margin to center it properly */
+    margin-left: 5px; /* If needed for better alignment */
+}
+
+/* Input fields */
+/* Rectangle 51 (Input Field Styling) */
+.input {
+    box-sizing: border-box;
+    width: 413px; /* Let the input take full width of the container */
+    height: 69.2px;
+    margin: 10px 0; /* Add margin between inputs */
+    background: #FFFFFF;
+    border: 1px solid #9F9F9F;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    padding: 10px; /* Add padding to give space for the input text */
+    font-size: 16px;
+    color: #000000; /* Set the text color to black */
+}
+
+.input:focus {
+    border-color: #007BFF; /* Blue border on focus */
+    outline: none;
+}
+
+.btn-reg-reg {
+    width: 110px; /* Make the button the same width as input fields */
+    height: 46px;
+    background: linear-gradient(180deg, #003BFF 0%, #002399 100%);
+    border-radius: 15px;
+    font-family: 'Cygre Medium', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: px; /* Aligns text vertically */
+    color: #f3f3f3;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 165px;
+    margin-top: 10px; /* Adjust the margin to give some space between the button and input */
+}
+
+/* Hover effect for the button */
+.btn:hover {
+    background: linear-gradient(180deg, #002399 0%, #003BFF 100%);
+}

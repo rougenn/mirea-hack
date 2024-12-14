@@ -1,0 +1,51 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 108px;
+    background-color: #fff;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.icon img,
+.logo img {
+    height: 79px;
+}
+
+.logo {
+    margin-left: 240px;
+    text-align: center;
+    margin-top: 230px;
+}
+
+.auth-buttons {
+    display: flex;
+    margin-top: 10px;
+}
+
+
+.login-button {
+    width: 129px;
+    height: 65px;
+    background-image: url('/loginbtn.png');
+    /* Путь к изображению кнопки "Вход" */
+}
+
+.register-button {
+    width: 215px;
+    height:65px;
+    background-image: url('/regbtn.png');
+}
+
+.auth-button:hover {
+    transform: scale(1.1); /* Легкое увеличение кнопки */
+}
+.auth-button:active {
+    transform: scale(0.95); /* Легкое уменьшение при нажатии */
+    filter: brightness(0.9); /* Затемнение при нажатии */
+}
