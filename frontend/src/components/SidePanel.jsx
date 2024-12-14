@@ -17,16 +17,18 @@ const SidePanel = ({
     return (
         <div className={`side-panel ${isOpen ? 'open' : ''}`}>
             <div className="side-panel-content">
-                {/* Кнопка для создания новой базы */}
                 <button onClick={onCreateBase}>Создать новую базу</button>
 
-                {/* Выбор базы формул */}
                 <div className="base-selector">
                     <label>Выберите базу формул:</label>
                     <select
                         value={selectedBase ? selectedBase.name : ''}
                         onChange={(e) =>
-                            setSelectedBase(customBases.find((base) => base.name === e.target.value))
+                            setSelectedBase(
+                                e.target.value === '' 
+                                    ? null 
+                                    : customBases.find((base) => base.name === e.target.value)
+                            )
                         }
                     >
                         <option value="">Исходная база</option>
@@ -38,7 +40,6 @@ const SidePanel = ({
                     </select>
                 </div>
 
-                {/* Отображение формул */}
                 {formulas.map((formula, index) => (
                     <div
                         key={index}
@@ -47,17 +48,16 @@ const SidePanel = ({
                         onMouseLeave={() => setHoveredIndex(null)}
                     >
                         <div className="formula-title">
-                            {formula.title}
+                            {formula.name}
                         </div>
                         {hoveredIndex === index && (
                             <div className="formula-body">
-                                <Latex>{`$${formula.formula}$`}</Latex>
+                                <Latex>{`$${formula.value}$`}</Latex>
                             </div>
                         )}
                     </div>
                 ))}
 
-                {/* Кнопка закрытия панели */}
                 <button className="close-button" onClick={onClose}>
                     <img src="./backbtn.png" alt="Close Side Panel" />
                 </button>

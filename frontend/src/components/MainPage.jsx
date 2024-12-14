@@ -1,60 +1,164 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import LatexInput from './Input';
 import Background from './Background';
-import SidePanel from './SidePanel'; // Импортируем компонент боковой панели
-import CreateBaseForm from './CreateBaseForm'; // Импортируем компонент для создания баз формул
+import SidePanel from './SidePanel'; 
+import CreateBaseForm from './CreateBaseForm';
 import 'katex/dist/katex.min.css';
-import formulas from './formulas.json'; // Исходные формулы
+import defaultBase from './formulas.json'; 
+import { useNavigate } from 'react-router-dom';
 
 export default function MainPage() {
-    const [isSidePanelOpen, setIsSidePanelOpen] = useState(false); // Состояние для управления панелью
-    const [customBases, setCustomBases] = useState([]); // Пользовательские базы формул
-    const [selectedBase, setSelectedBase] = useState(null); // Выбранная база формул
-    const [isCreatingBase, setIsCreatingBase] = useState(false); // Состояние для отображения формы создания базы
+    const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+    const [customBases, setCustomBases] = useState([]); 
+    const [selectedBase, setSelectedBase] = useState(null); 
+    const [isCreatingBase, setIsCreatingBase] = useState(false); 
+    const navigate = useNavigate();
 
-    // Функция для добавления новой базы формул
-    const addNewBase = (newBase) => {
-        setCustomBases([...customBases, newBase]);
-        setIsCreatingBase(false); // Закрываем форму создания базы
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            fetchFormulaDBList(token).catch(error => {
+                console.error('Ошибка при получении баз формул:', error);
+            });
+        }
+    }, []);
+
+    async function fetchFormulaDBList(token) {
+        let response = await fetch('http://localhost:8090/api/formula-db/list', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 401) {
+            const refreshed = await tryRefreshTokens();
+            if (refreshed) {
+                const newAccessToken = localStorage.getItem('access_token');
+                response = await fetch('http://localhost:8090/api/formula-db/list', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${newAccessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } else {
+                console.error('Не удалось обновить токен, перенаправляем на логин');
+                navigate('/login');
+                return;
+            }
+        }
+
+        if (!response.ok) {
+            throw new Error(`Ошибка при загрузке баз: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data && data.dbs) {
+            setCustomBases(data.dbs);
+        }
+    }
+
+    async function tryRefreshTokens() {
+        const accessToken = localStorage.getItem('access_token');
+        const refreshToken = localStorage.getItem('refresh_token');
+        if (!accessToken || !refreshToken) return false;
+
+        const response = await fetch('http://localhost:8090/api/user/refresh-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "access_token": accessToken, "refresh_token": refreshToken })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('refresh_token', data.refresh_token);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Сохранение новой базы
+    const addNewBase = async (newBase) => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            console.error('Нет токена для сохранения новой базы');
+            return;
+        }
+
+        let response = await fetch('http://localhost:8090/api/formula-db/new', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newBase)
+        });
+
+        if (response.status === 401) {
+            const refreshed = await tryRefreshTokens();
+            if (refreshed) {
+                const newAccessToken = localStorage.getItem('access_token');
+                response = await fetch('http://localhost:8090/api/formula-db/new', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${newAccessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newBase)
+                });
+            } else {
+                console.error('Не удалось обновить токен, перенаправляем на логин');
+                navigate('/login');
+                return;
+            }
+        }
+
+        if (!response.ok) {
+            console.error('Ошибка при создании новой базы:', response.status);
+            return;
+        }
+
+        const data = await response.json(); // {"id": "uuid..."}
+        setCustomBases(prev => [...prev, { ...newBase, id: data.id }]);
+        setIsCreatingBase(false);
     };
 
-    // Формулы для отображения (либо изначальные, либо выбранная база)
-    const displayedFormulas = selectedBase ? selectedBase.formulas : formulas;
+    const displayedFormulas = selectedBase && selectedBase.table 
+        ? selectedBase.table 
+        : defaultBase.table;
 
     return (
         <Background>
             <Navbar />
             <LatexInput
-                isSidePanelOpen={isSidePanelOpen} // Передаем состояние в компонент LatexInput
-                setIsSidePanelOpen={setIsSidePanelOpen} // Передаем функцию для управления состоянием
+                isSidePanelOpen={isSidePanelOpen}
+                setIsSidePanelOpen={setIsSidePanelOpen}
             />
-
-            {/* Кнопка для открытия/закрытия боковой панели (картинка) */}
             <button
                 className="toggle-side-panel-button"
                 onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
             >
                 <img src="./basebtn.png" alt="Toggle Side Panel" />
             </button>
-
-            {/* Боковая панель */}
             <SidePanel
-                isOpen={isSidePanelOpen} // Передаем состояние в компонент SidePanel
-                onClose={() => setIsSidePanelOpen(false)} // Функция для закрытия панели
-                formulas={displayedFormulas} // Передаем формулы в SidePanel
-                customBases={customBases} // Передаем пользовательские базы
-                selectedBase={selectedBase} // Передаем выбранную базу
-                setSelectedBase={setSelectedBase} // Функция для выбора базы
-                onCreateBase={() => setIsCreatingBase(true)} // Функция для открытия формы создания базы
+                isOpen={isSidePanelOpen}
+                onClose={() => setIsSidePanelOpen(false)}
+                formulas={displayedFormulas}
+                customBases={customBases}
+                selectedBase={selectedBase}
+                setSelectedBase={setSelectedBase}
+                onCreateBase={() => setIsCreatingBase(true)}
             />
-
-            {/* Модальное окно для создания новой базы */}
             {isCreatingBase && (
                 <CreateBaseForm
-                    onAddBase={addNewBase} // Функция для добавления новой базы
-                    onClose={() => setIsCreatingBase(false)} // Функция для закрытия формы
-                    initialFormulas={formulas} // Передаем исходные формулы
+                    onAddBase={addNewBase}
+                    onClose={() => setIsCreatingBase(false)}
+                    initialFormulas={defaultBase.table}
                 />
             )}
         </Background>

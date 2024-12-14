@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
 
 const CreateBaseForm = ({ onAddBase, onClose, initialFormulas }) => {
-    const [baseName, setBaseName] = useState(''); // Название новой базы
-    const [customFormulas, setCustomFormulas] = useState([]); // Собственные формулы
-    const [selectedInitialFormulas, setSelectedInitialFormulas] = useState([]); // Выбранные формулы из исходной базы
+    const [baseName, setBaseName] = useState(''); 
+    const [customFormulas, setCustomFormulas] = useState([]); // теперь { name, value }
+    const [selectedInitialFormulas, setSelectedInitialFormulas] = useState([]); // { name, value }
 
     // Состояния для добавления новой формулы
-    const [newFormulaTitle, setNewFormulaTitle] = useState(''); // Название новой формулы
-    const [newFormulaValue, setNewFormulaValue] = useState(''); // Значение новой формулы
+    const [newFormulaName, setNewFormulaName] = useState(''); 
+    const [newFormulaValue, setNewFormulaValue] = useState('');
 
-    // Обработчик добавления формулы из исходной базы
+    // Обработчик добавления/удаления формулы из исходной базы
     const handleAddInitialFormula = (formula) => {
         if (!selectedInitialFormulas.includes(formula)) {
-            setSelectedInitialFormulas([...selectedInitialFormulas, formula]);
+            setSelectedInitialFormulas(prev => [...prev, formula]);
         } else {
-            setSelectedInitialFormulas(selectedInitialFormulas.filter((f) => f !== formula));
+            setSelectedInitialFormulas(prev => prev.filter((f) => f !== formula));
         }
     };
 
-    // Обработчик добавления новой формулы вручную
+    // Обработчик добавления новой формулы вручную (уже в { name, value } формате)
     const handleAddCustomFormula = () => {
-        if (!newFormulaTitle.trim() || !newFormulaValue.trim()) {
+        if (!newFormulaName.trim() || !newFormulaValue.trim()) {
             alert('Пожалуйста, заполните название и формулу.');
             return;
         }
-        setCustomFormulas([...customFormulas, { title: newFormulaTitle, formula: newFormulaValue }]);
-        setNewFormulaTitle(''); // Очищаем поле названия
-        setNewFormulaValue(''); // Очищаем поле формулы
+        setCustomFormulas(prev => [...prev, { name: newFormulaName, value: newFormulaValue }]);
+        setNewFormulaName(''); 
+        setNewFormulaValue('');
     };
 
     // Обработчик создания новой базы
@@ -36,16 +36,13 @@ const CreateBaseForm = ({ onAddBase, onClose, initialFormulas }) => {
             return;
         }
 
-        // Создаем новую базу
+        // Формируем таблицу из выбранных и собственных формул (оба массива уже в { name, value } формате)
         const newBase = {
             name: baseName,
-            formulas: [...selectedInitialFormulas, ...customFormulas],
+            table: [...selectedInitialFormulas, ...customFormulas]
         };
 
-        // Передаем новую базу в SidePanel
         onAddBase(newBase);
-
-        // Закрываем окно
         onClose();
     };
 
@@ -74,7 +71,7 @@ const CreateBaseForm = ({ onAddBase, onClose, initialFormulas }) => {
                                         checked={selectedInitialFormulas.includes(formula)}
                                         onChange={() => handleAddInitialFormula(formula)}
                                     />
-                                    {formula.title}
+                                    {formula.name}
                                 </label>
                             </div>
                         ))}
@@ -83,13 +80,13 @@ const CreateBaseForm = ({ onAddBase, onClose, initialFormulas }) => {
 
                 {/* Добавление собственных формул */}
                 <div className="custom-formulas">
-                    <h4>Добавить собственные формулы:</h4>
+                    <h4>Добавить собственные формулы (LaTeX):</h4>
                     <div className="add-custom-formula">
                         <input
                             type="text"
                             placeholder="Название формулы"
-                            value={newFormulaTitle}
-                            onChange={(e) => setNewFormulaTitle(e.target.value)}
+                            value={newFormulaName}
+                            onChange={(e) => setNewFormulaName(e.target.value)}
                         />
                         <textarea
                             placeholder="Введите формулу (LaTeX)"
@@ -102,7 +99,7 @@ const CreateBaseForm = ({ onAddBase, onClose, initialFormulas }) => {
                         <ul>
                             {customFormulas.map((formula, index) => (
                                 <li key={index}>
-                                    {formula.title}: {formula.formula}
+                                    {formula.name}: {formula.value}
                                 </li>
                             ))}
                         </ul>
