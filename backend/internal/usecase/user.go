@@ -29,15 +29,19 @@ func NewUserUseCase(db Database) UserUseCase {
 	return uc
 }
 
+var (
+	ErrIncorrectData = errors.New("password and/or username are incorrect")
+)
+
 func (uc UserUseCase) SignIn(email, password string) (entity.User, error) {
 	user, err := uc.store.GetUserByEmail(email)
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, ErrIncorrectData
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, ErrIncorrectData
 	}
 
 	return user, nil

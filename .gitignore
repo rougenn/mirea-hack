@@ -30,3 +30,4 @@ __pycache__
 backend/go.sum
 backend/go.mod
 backend/backend
+backend/frontend
