@@ -181,18 +181,7 @@ if __name__ == "__main__":
         (r"x^{3} + 2*x^{2} + x", r"x^{3} + x^{2} + x"),
     ]
 
-    polynomials = [
-        r"2 * x^{2} + 3 * x + 1",
-        r"-1 * x^{2} + 4 * x - 5",
-        r"3 * x^{2} - 2 * x + 7",
-        r"5 * x^{2} + 1 * x - 3",
-        r"-2 * x^{2} + 6 * x + 4",
-        r"1 * x^{2} - 8 * x + 16",
-        r"4 * x^{2} + 0 * x + 2",
-        r"7 * x^{2} - 3 * x + 1",
-        r"-1 * x^{2} + 2 * x + 8",
-        r"6 * x^{2} - 4 * x + 5",
-    ]
+    polynomials = ['l \\times w', '0.5 \\times b \\times h', '\\pi r^2', '2 \\pi r', '2(l + w)', 'a^2 + b^2', '\\frac{4}{3} \\pi r^3', '\\pi r^2 h', '\\frac{1}{3} \\pi r^2 h', 'l w h', '\\frac{y_2 - y_1}{x_2 - x_1}', '\\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', '\\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}', '\\left(\\frac{x_1 + x_2}{2}, \\frac{y_1 + y_2}{2}\\right)', 'P r t', 'P(1 + \\frac{r}{n})^{nt}', '\\frac{m}{V}', '\\frac{d}{t}', 'm a', 'F d \\cos(\\theta)', '\\frac{W}{t}', '0.5 m v^2', 'm g h', 'I R', '\\frac{nRT}{P}', 'e^{i\\theta} = \\cos(\\theta) + i \\sin(\\theta)', '\\frac{n}{2}(a_1 + a_n)', 'a_1 \\frac{1 - r^n}{1 - r}', '0.5 (a+b) h']
 
 
     for f1, f2 in formulas:
