@@ -7,6 +7,7 @@ import CreateBaseForm from './CreateBaseForm';
 import 'katex/dist/katex.min.css';
 import defaultBase from './formulas.json'; 
 import { useNavigate } from 'react-router-dom';
+import ComparisonModal from './ComparisonModal'; // Импортируем ComparisonModal
 
 export default function MainPage() {
     const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -18,17 +19,21 @@ export default function MainPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Проверяем, заходил ли пользователь впервые
         const isFirstVisit = !localStorage.getItem('visited');
-        if (isFirstVisit) {
-            setIsModalOpen(true);
-            localStorage.setItem('visited', 'false');
-        }
-    }, []);
-
-    useEffect(() => {
         const token = localStorage.getItem('access_token');
-        if (token) {
+
+        if (isFirstVisit && token) {
+            // Сначала загружаем базы, затем открываем модальное окно
+            fetchFormulaDBList(token)
+                .then(() => {
+                    setIsModalOpen(true);
+                    localStorage.setItem('visited', 'false');
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении списка баз формул:', error);
+                });
+        } else if (token) {
+            // Если не первая визита, просто загружаем базы
             fetchFormulaDBList(token).catch(error => {
                 console.error('Ошибка при получении списка баз формул:', error);
             });
@@ -80,7 +85,6 @@ export default function MainPage() {
         });
 
         if (response.status === 401) {
-            // Попытка обновить токен
             const refreshed = await tryRefreshTokens();
             if (refreshed) {
                 token = localStorage.getItem('access_token');
@@ -119,8 +123,12 @@ export default function MainPage() {
 
         if (response) {
             const data = await response.json();
+            console.log('Базы формул:', data); // Отладка
             if (data && data.dbs) {
+                console.log('Пользовательские базы:', data.dbs); // Отладка
                 setCustomBases(data.dbs);
+            } else {
+                console.warn('В ответе нет поля dbs или оно пустое');
             }
         }
     }
@@ -133,7 +141,9 @@ export default function MainPage() {
 
         if (response) {
             const data = await response.json(); // {"id": "uuid..."}
-            setCustomBases(prev => [...prev, { ...newBase, id: data.id }]);
+            const newCustomBase = { ...newBase, id: data.id };
+            console.log('Добавлена новая база:', newCustomBase); // Отладка
+            setCustomBases(prev => [...prev, newCustomBase]);
             setIsCreatingBase(false);
         }
     }
@@ -171,8 +181,13 @@ export default function MainPage() {
                     initialFormulas={defaultBase.table}
                 />
             )}
-            {/* Модальное окно, если нужно, можно будет вставить сюда */}
+
+            <ComparisonModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                formulas={displayedFormulas}        // Формулы для сравнения, те что отображаются в данный момент
+            />
+
         </Background>
     );
 }
-    

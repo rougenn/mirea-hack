@@ -1,5 +1,4 @@
 {
-    "id": null,
     "name": "Default Base",
     "table": [
       { "name": "Площадь прямоугольника",          "value": "l \\times w" },
