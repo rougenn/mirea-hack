@@ -32,8 +32,8 @@ func NewRouter(handler *gin.Engine, uc usecase.User, ac usecase.FormulaApi) {
 	{
 		protected.Use(jwt.AuthMiddleware())
 		protected.GET("/formula-db/list", r.GetFormulaDBList)
-		protected.POST("/compare/with-db")
-		protected.POST("/compare/with-formula")
+		protected.POST("/compare/with-db", r.CompareWithDB)
+		protected.POST("/compare/with-formula", r.CompareWithFormula)
 		protected.PUT("/formula-db/new", r.CreateFormulaDB)
 		protected.GET("/formula-db")
 	}

@@ -1,6 +1,6 @@
 import re
 from sympy.parsing.latex import parse_latex
-from sympy import simplify, expand, SympifyError
+from sympy import simplify, expand, SympifyError, latex
 from functools import lru_cache
 
 def clean_latex_string(latex_str: str) -> str:
@@ -30,11 +30,8 @@ def try_transformations(expr1, expr2):
         for name2, t2 in transformations:
             transformed_expr1 = t1(expr1)
             transformed_expr2 = t2(expr2)
-
-            # Проверим эквивалентность
             diff = simplify(transformed_expr1 - transformed_expr2)
             if diff == 0:
-                # Полное совпадение
                 similarity = 100.0
             else:
                 str1 = expr_to_string(transformed_expr1)
@@ -49,26 +46,21 @@ def try_transformations(expr1, expr2):
     return best_pair
 
 def expr_to_string(expr):
-    # Преобразуем выражение в строку, убираем '*' для удобочитаемости
     s = str(expr)
     s = s.replace('*', '')
     return s
 
 def tokenize(formula_str):
-    # Разбиваем строку на токены
     tokens = re.findall(r'[()+\-^]|[0-9]+|[a-zA-Z]+[0-9]*|[0-9]+[a-zA-Z]+', formula_str)
-
     final_tokens = []
     for t in tokens:
         if '^' in t and t != '^':
-            # Разбиваем x^2 → ['x','^','2']
             parts = t.split('^')
             final_tokens.append(parts[0])
             final_tokens.append('^')
             final_tokens.append(parts[1])
         else:
             if re.match(r'^[0-9]+[a-zA-Z]+$', t):
-                # 3x → ['3','x']
                 m = re.match(r'^([0-9]+)([a-zA-Z]+)$', t)
                 if m:
                     final_tokens.append(m.group(1))
@@ -119,71 +111,94 @@ def calc_similarity(seq1, seq2):
         return (2 * l / (len(seq1) + len(seq2))) * 100
     return 0.0
 
-def highlight_differences(seq1, seq2):
+def tokenize_latex(latex_str):
+    pattern = r'(\\[a-zA-Z]+)|(\d+)|([a-zA-Z])|([\^\+\-\(\)\{\}])'
+    tokens_raw = re.findall(pattern, latex_str)
+    tokens = []
+    for group in tokens_raw:
+        for g in group:
+            if g:
+                tokens.append(g)
+    return tokens
+
+
+
+def highlight_differences_in_latex(latex_str_1, latex_str_2):
+    seq1 = tokenize_latex(latex_str_1)
+    seq2 = tokenize_latex(latex_str_2)
     lcs_res = reconstruct_lcs(seq1, seq2)
     lcs_set = set(lcs_res)
     new_seq1 = [f";{t};" if t not in lcs_set else t for t in seq1]
     new_seq2 = [f";{t};" if t not in lcs_set else t for t in seq2]
-    return new_seq1, new_seq2
-
-def rejoin_tokens(tokens):
-    result = []
-    for t in tokens:
-        if t in ['+', '-']:
-            # операторы + и - с пробелами вокруг
-            result.append(' + ' if t == '+' else ' - ')
-        else:
-            result.append(t)
-    s = ''.join(result)
-    s = re.sub(r'\s+', ' ', s).strip()
-    return s
-
-def postprocess_and_highlight(expr1, expr2, similarity):
-    # Если сходство 100% - возвращаем как есть
-    if similarity == 100.0:
-        return str(expr1).replace('*',''), str(expr2).replace('*','')
-
-    str1 = expr_to_string(expr1)
-    str2 = expr_to_string(expr2)
-
-    seq1 = tokenize(str1)
-    seq2 = tokenize(str2)
-
-    new_seq1, new_seq2 = highlight_differences(seq1, seq2)
-
-    res1 = rejoin_tokens(new_seq1)
-    res2 = rejoin_tokens(new_seq2)
-
-    return res1, res2
+    highlighted_1 = ''.join(new_seq1)
+    highlighted_2 = ''.join(new_seq2)
+    return highlighted_1, highlighted_2
 
 def compare_formulas(latex_str_1: str, latex_str_2: str):
-    clean_1 = clean_latex_string(latex_str_1)
-    clean_2 = clean_latex_string(latex_str_2)
-
     expr1 = parse_formula(latex_str_1)
     expr2 = parse_formula(latex_str_2)
 
     best_similarity, best_expr1, best_expr2, transf1, transf2 = try_transformations(expr1, expr2)
 
-    highlighted_1, highlighted_2 = postprocess_and_highlight(best_expr1, best_expr2, best_similarity)
+    # Используем mul_symbol='\\cdot' чтобы явно отображать умножение
+    latex_expr1 = latex(best_expr1, mul_symbol='\\cdot')
+    latex_expr2 = latex(best_expr2, mul_symbol='\\cdot')
 
+    # Удаляем \left и \right
+    latex_expr1 = latex_expr1.replace('\\left','').replace('\\right','')
+    latex_expr2 = latex_expr2.replace('\\left','').replace('\\right','')
+
+    if best_similarity == 100.0:
+        return best_similarity, latex_expr1, latex_expr2
+
+    highlighted_1, highlighted_2 = highlight_differences_in_latex(latex_expr1, latex_expr2)
     return best_similarity, highlighted_1, highlighted_2
+
+def compare_with_list(formula, list_of_fs):
+    top5 = []
+    percents = {}
+    for i in range(len(list_of_fs)):
+        percents[i] = compare_formulas(formula, list_of_fs[i])[0]
+    percents_sorted = dict(sorted(percents.items(), key=lambda item: item[1], reverse=True))
+    keys_list = list(percents_sorted.keys())
+    for i in range(min(5, len(keys_list))):
+        index = keys_list[i]
+        top5.append((list_of_fs[index], percents_sorted[index]))
+    return top5
 
 
 if __name__ == "__main__":
     formulas = [
-        (r"x^{2} + 2*x + 1", r"x^{2} + 2*x"),
-        (r"\sin(x) + \cos(x)", r"\sin(x) - \cos(x)"),
+        (r"(x+1)^{2}", r"x^{2} + 2*x"),
+        ("\\sin(x) + \cos(x)", "\\sin(x) - \cos(x)"),
         (r"e^{x} + e^{-x}", r"e^{x} - e^{-x}"),
         (r"\log(2*x)", r"\log(x) + \log(2)"),
         (r"\frac{1}{x} + \frac{1}{y}", r"\frac{1}{x+y}"),
         (r"\tan(x)", r"\cot(x)"),
         (r"\sqrt{x^{2} + 1}", r"x + 1"),
-        (r"(x + 1)(x - 1)", r"x^{2} - 1"),
+        (r"\sqrt{x}", r"\sqrt[2]{x}"),
         (r"\sin^{2}(x)", r"1 - \sin^{2}(x)"),
         (r"x^{3} + 2*x^{2} + x", r"x^{3} + x^{2} + x"),
     ]
 
+    polynomials = [
+        r"2 * x^{2} + 3 * x + 1",
+        r"-1 * x^{2} + 4 * x - 5",
+        r"3 * x^{2} - 2 * x + 7",
+        r"5 * x^{2} + 1 * x - 3",
+        r"-2 * x^{2} + 6 * x + 4",
+        r"1 * x^{2} - 8 * x + 16",
+        r"4 * x^{2} + 0 * x + 2",
+        r"7 * x^{2} - 3 * x + 1",
+        r"-1 * x^{2} + 2 * x + 8",
+        r"6 * x^{2} - 4 * x + 5",
+    ]
+
+
     for f1, f2 in formulas:
         result = compare_formulas(f1, f2)
         print(f"Вход: {f1} и {f2}\nВыход: {result}\n")
+
+    check = r"2*x^{2} + x - 3"
+
+    print(compare_with_list(check, polynomials))

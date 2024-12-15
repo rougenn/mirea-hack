@@ -25,6 +25,6 @@ type (
 	}
 
 	FormulaApi interface {
-		Compare(entity.Formula, entity.Formula) (float64, string, string, error) // percent of несовпадения, two formulas >!
+		Compare(string, string) (float64, string, string, error) // percent of несовпадения, two formulas >!
 	}
 )

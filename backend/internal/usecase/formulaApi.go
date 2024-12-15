@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"mirea-hack/internal/entity"
 	"net/http"
 )
 
@@ -18,20 +17,19 @@ func NewFormulaApiUseCase(conn string) FormulaApiUseCase {
 	}
 }
 
-func (uc FormulaApiUseCase) Compare(formula1, formula2 entity.Formula) (float64, string, string, error) {
+func (uc FormulaApiUseCase) Compare(formula1, formula2 string) (float64, string, string, error) {
 	requestData := struct {
 		Formula1 string `json:"formula1"`
 		Formula2 string `json:"formula2"`
 	}{
-		Formula1: formula1.Value,
-		Formula2: formula2.Value,
+		Formula1: formula1,
+		Formula2: formula2,
 	}
 
 	jsonData, err := json.Marshal(requestData)
 	if err != nil {
 		return 0, "", "", fmt.Errorf("failed to marshal request data: %w", err)
 	}
-
 	resp, err := http.Post(uc.conn, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return 0, "", "", fmt.Errorf("failed to send request to Python server: %w", err)
