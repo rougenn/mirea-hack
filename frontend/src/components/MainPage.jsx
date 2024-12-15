@@ -16,7 +16,8 @@ export default function MainPage() {
     const [customBases, setCustomBases] = useState([]);
     const [selectedBase, setSelectedBase] = useState(null);
     const [isCreatingBase, setIsCreatingBase] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(true); // Состояние для управления модальным окном
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [isInstrucntionOpen, setIsInstructionOpen] = useState(true)// Состояние для управления модальным окном
 
     const navigate = useNavigate();
 
@@ -196,10 +197,10 @@ export default function MainPage() {
                 formulas={displayedFormulas}        // Формулы для сравнения, те что отображаются в данный момент
             />
 
-            {isModalOpen && (
+            {isInstrucntionOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <button className="close-button-instructions" onClick={() => setIsModalOpen(false)}>
+                        <button className="close-button-instructions" onClick={() => setIsInstructionOpen(false)}>
                             &times; {/* Крестик для закрытия */}
                         </button>
                         <Instruction />
@@ -209,3 +210,4 @@ export default function MainPage() {
         </Background>
     );
 }
+ 
