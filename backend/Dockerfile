@@ -1,11 +1,11 @@
-# Используем официальный образ Go
+# Используем официальный образ Go в качестве базового
 FROM golang:1.23-alpine
 
-# Устанавливаем рабочую директорию в контейнере
+# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Устанавливаем bash
-RUN apk add --no-cache bash
+# Устанавливаем bash и dos2unix для конвертации окончаний строк
+RUN apk add --no-cache bash dos2unix
 
 # Копируем go.mod и go.sum для установки зависимостей
 COPY go.mod go.sum ./
@@ -16,11 +16,18 @@ RUN go mod tidy
 # Копируем остальные файлы проекта
 COPY . .
 
-# Копируем скрипт ожидания
-COPY wait-for-it.sh /app/wait-for-it.sh
+# Конвертируем окончания строк скрипта wait-for-it.sh на Unix-формат
+RUN dos2unix wait-for-it.sh
+
+# Проверяем и исправляем shebang в wait-for-it.sh (опционально)
+# Убедитесь, что первая строка скрипта правильно указывает интерпретатор
+RUN sed -i '1s|^.*$|#!/bin/bash|' wait-for-it.sh
 
 # Делаем скрипт исполняемым
 RUN chmod +x /app/wait-for-it.sh
+
+# Проверяем наличие бинарного файла main (опционально для отладки)
+# RUN ls -la /app
 
 # Собираем бинарник и помещаем его в /app
 RUN go build -o main ./cmd/app
