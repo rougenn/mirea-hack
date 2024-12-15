@@ -12,9 +12,13 @@
     z-index: 1000;
 }
 
-.icon img,
+.icon img
+{
+    height: 100px;
+}
 .logo img {
     height: 79px;
+    width: 408px;
 }
 
 .logo {
@@ -32,14 +36,14 @@
 .login-button {
     width: 129px;
     height: 65px;
-    background-image: url('/loginbtn.png');
+    background-image: url('/assets/loginbtn.png');
     /* Путь к изображению кнопки "Вход" */
 }
 
 .register-button {
     width: 215px;
     height:65px;
-    background-image: url('/regbtn.png');
+    background-image: url('/assets/regbtn.png');
 }
 
 .auth-button:hover {

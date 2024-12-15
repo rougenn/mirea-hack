@@ -41,10 +41,6 @@
     color: #000000; /* Set the text color to black */
 }
 
-.input:focus {
-    border-color: #007BFF; /* Blue border on focus */
-    outline: none;
-}
 
 .btn-reg-reg {
     width: 110px; /* Make the button the same width as input fields */

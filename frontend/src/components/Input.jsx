@@ -200,7 +200,7 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                                 >
                                     {getWrappedText(row.inputText).map((line, index) => (
                                         <div key={index}>
-                                            <Latex>{`$${line}$`}</Latex>
+                                            <Latex>{`$${row.inputText}$`}</Latex>
                                         </div>
                                     ))}
                                 </div>
@@ -243,7 +243,7 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                 className="fixed-compare-button"
                 onClick={() => setIsComparisonModalOpen(true)}
             >
-                <img src="./handwritingbtn.png" alt="" />
+                <img src="./assets/handwritingbtn.png" alt="" />
             </button>
 
             {similarFormulas.length > 0 && (
