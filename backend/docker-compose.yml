@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - PG_URL=postgres://user:password@postgres:5432/my-database
-      - CONN=http://python_server:5000/compare
+      - CONN=http://python_server:5000
     ports:
       - "8090:8090"
     networks:

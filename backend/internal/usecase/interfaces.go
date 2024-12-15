@@ -26,5 +26,6 @@ type (
 
 	FormulaApi interface {
 		Compare(string, string) (float64, string, string, error) // percent of несовпадения, two formulas >!
+		CompareWithDB(string, []string) (Resp, error)
 	}
 )

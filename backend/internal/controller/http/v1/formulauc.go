@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"bytes"
-	"encoding/json"
 	"mirea-hack/internal/entity"
 	"mirea-hack/pkg/jwt"
 	"net/http"
@@ -109,42 +107,13 @@ func (r *Uc) CompareWithDB(ctx *gin.Context) {
 		return
 	}
 
-	requestData := map[string]interface{}{
-		"formula":   input.Formula,
-		"formuladb": input.FormulaDB,
-	}
+	response, err := r.ac.CompareWithDB(input.Formula, input.FormulaDB)
 
-	jsonData, err := json.Marshal(requestData)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to serialize request data"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "server error", "details": err.Error()})
 		return
 	}
 
-	pythonServerURL := "http://python_server:5000/compare-with-db"
-	resp, err := http.Post(pythonServerURL, "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request to Python server", "details": err.Error()})
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Python server returned an error", "status": resp.StatusCode})
-		return
-	}
-
-	var response struct {
-		Top5 []struct {
-			Formula string  `json:"formula"`
-			Score   float64 `json:"score"`
-		} `json:"top5"`
-	}
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode response from Python server"})
-		return
-	}
-
-	// Возвращаем ответ клиенту
 	ctx.JSON(http.StatusOK, gin.H{
 		"top5": response.Top5,
 	})
