@@ -13,6 +13,8 @@ const MathPanel = ({ onInsert }) => {
         { id: 'sum', label: '∑', latex: '\\sum_{#1}^{#2} #3', placeholders: ['Нижний предел', 'Верхний предел', 'Сумманда'] },
         { id: 'power', label: '⌃', latex: '#1^{#2}', placeholders: ['Основание', 'Показатель'] },
         { id: 'parentheses', label: '()', latex: '({#1})', placeholders: ['Выражение'] },
+        { id: 'logarithm', label: 'log', latex: '\\log_{#1} #2', placeholders: ['Основание', 'Исходное число'] },
+        { id: 'exponential', label: 'e^x', latex: 'e^{#1}', placeholders: ['Степень'] },
     ];
 
     const handleSymbolSelect = (symbol) => {
