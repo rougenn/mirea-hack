@@ -27,6 +27,5 @@ go.work.sum
 __pycache__
 .env
 
-backend/go.sum
-backend/go.mod
+
 backend/backend
