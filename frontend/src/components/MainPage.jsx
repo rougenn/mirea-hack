@@ -170,7 +170,7 @@ export default function MainPage() {
             </button>
             <button
                 className="toggle-instruction-button"
-                onClick={() => setIsModalOpen(!isModalOpen)} // Переключение состояния модального окна
+                onClick={() => setIsInstructionOpen(!isInstrucntionOpen)} // Переключение состояния модального окна
             >
                 💡
             </button>
