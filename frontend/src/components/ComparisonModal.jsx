@@ -11,14 +11,11 @@ const ComparisonModal = ({
     const [customBases, setCustomBases] = useState([]);
     const [resultMessage, setResultMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
     const [isSelectingBase, setIsSelectingBase] = useState(false);
     const [selectedBaseIndex, setSelectedBaseIndex] = useState(null);
+    const [selectedFormulas, setSelectedFormulas] = useState([]);
 
     const navigate = useNavigate();
-
-    // Состояние для отслеживания выбранных формул
-    const [selectedFormulas, setSelectedFormulas] = useState([]);
 
     // Fetch customBases when modal opens
     useEffect(() => {
@@ -221,13 +218,15 @@ const ComparisonModal = ({
             const data = await response.json();
             console.log('Результат сравнения:', data);
 
-            let result = 'Результат сравнения с базой:\n';
+            let result = `
+                <h3>Результаты сравнения с базой</h3>
+            `;
             if (data.top5 && data.top5.length > 0) {
                 data.top5.forEach((item, idx) => {
-                    result += `${idx+1}. Формула: ${item.formula}, Сходство: ${item.score}%\n`;
+                    result += `<p>${idx + 1}. Формула: ${item.formula}, Сходство: ${item.score}%</p>`;
                 });
             } else {
-                result += 'Нет результатов для отображения.';
+                result += '<p>Нет результатов для отображения.</p>';
             }
             setResultMessage(result);
         } catch (error) {
@@ -240,14 +239,12 @@ const ComparisonModal = ({
 
     // Обработчик кнопки "Сравнить между собой"
     const handleCompareBetween = async () => {
-        if (selectedFormulas.length < 2) {
-            alert('Пожалуйста, выберите хотя бы две формулы для сравнения между собой.');
+        if (selectedFormulas.length !== 2) {
+            alert('Пожалуйста, выберите ровно две формулы для сравнения.');
             return;
         }
 
-        const formula1Text = selectedFormulas[0].inputText; // 'inputText'
-        const formula2Text = selectedFormulas[1].inputText; // 'inputText' is CORRECT!!
-
+        const [formula1Text, formula2Text] = selectedFormulas.map((f) => f.inputText);
         setIsLoading(true);
         setResultMessage('Сравниваю выбранные формулы между собой...');
 
@@ -265,11 +262,19 @@ const ComparisonModal = ({
             const data = await response.json();
             console.log('Результат сравнения между формулами:', data);
 
-            const result = `Результат сравнения между формулами:\nФормула 1: ${data.formula1}\nФормула 2: ${data.formula2}\nОценка сходства: ${data.score}%`;
+            // Предполагается, что сервер возвращает 'formula1', 'highlighted2', и 'score'
+            const highlightedFormula2 = data.formula2.replace(/;(.+?);/g, '<span class="highlight-difference">$1</span>');
+
+            const result = `
+                <h3>Результат сравнения между формулами</h3>
+                <p><b>Формула 1:</b> ${data.formula1}</p>
+                <p><b>Формула 2:</b> ${highlightedFormula2}</p>
+                <p><b>Сходство:</b> ${data.score}%</p>
+            `;
             setResultMessage(result);
         } catch (error) {
-            console.error('Ошибка:', error);
-            setResultMessage('Произошла ошибка при сравнении выбранных формул.');
+            console.error('Ошибка при сравнении формул:', error);
+            setResultMessage('Произошла ошибка при сравнении формул.');
         } finally {
             setIsLoading(false);
         }
@@ -290,7 +295,14 @@ const ComparisonModal = ({
                 <div className="modal-content">
                     {resultMessage ? (
                         <div className="result-message">
-                            {isLoading ? <h2>Загрузка...</h2> : <pre style={{ whiteSpace: 'pre-wrap' }}>{resultMessage}</pre>}
+                            {isLoading ? (
+                                <h2>Загрузка...</h2>
+                            ) : (
+                                <div
+                                    style={{ whiteSpace: 'pre-wrap' }}
+                                    dangerouslySetInnerHTML={{ __html: resultMessage }}
+                                />
+                            )}
                             {!isLoading && (
                                 <button className="close-button-compare" onClick={handleClose}>
                                     Закрыть
@@ -339,7 +351,7 @@ const ComparisonModal = ({
                                         />
                                         <label htmlFor={`formula-${index}`}>
                                             <span className="formula-number">{index + 1}</span>
-                                            <span className="formula-text">{formula.inputText}</span> {/* Используем 'inputText' */}
+                                            <span className="formula-text">{formula.inputText}</span>
                                         </label>
                                     </div>
                                 ))}

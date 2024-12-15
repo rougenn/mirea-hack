@@ -13,12 +13,17 @@
 
 .modal-content {
     background: white;
+    color: rgb(0, 0, 0);
     padding: 20px;
     border-radius: 10px;
     width: 400px;
     max-width: 90%;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
+.highlight-difference {
+    color: red;
+}
+
 
 .modal-content h2 {
     font-size: 24px;
