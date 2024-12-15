@@ -3,6 +3,7 @@ package usecase
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -30,7 +31,7 @@ func (uc FormulaApiUseCase) Compare(formula1, formula2 string) (float64, string,
 	if err != nil {
 		return 0, "", "", fmt.Errorf("failed to marshal request data: %w", err)
 	}
-	resp, err := http.Post(uc.conn, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(uc.conn+"/compare", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return 0, "", "", fmt.Errorf("failed to send request to Python server: %w", err)
 	}
@@ -52,4 +53,43 @@ func (uc FormulaApiUseCase) Compare(formula1, formula2 string) (float64, string,
 	}
 
 	return responseData.Score, responseData.Formula1, responseData.Formula2, nil
+}
+
+type Resp struct {
+	Top5 []struct {
+		Formula string  `json:"formula"`
+		Score   float64 `json:"score"`
+	} `json:"top5"`
+}
+
+func (uc FormulaApiUseCase) CompareWithDB(formula string, formuladb []string) (Resp, error) {
+	pythonServerURL := uc.conn + "/compare-with-db"
+	requestData := map[string]interface{}{
+		"formula":   formula,
+		"formuladb": formuladb,
+	}
+
+	jsonData, err := json.Marshal(requestData)
+	if err != nil {
+		return Resp{}, err
+	}
+
+	resp, err := http.Post(pythonServerURL, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return Resp{}, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return Resp{}, errors.New("bad code from server")
+	}
+
+	// Чтение ответа от Python-сервера
+	var response Resp
+
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return Resp{}, err
+	}
+
+	return response, nil
 }
