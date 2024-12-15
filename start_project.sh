@@ -3,10 +3,6 @@
 # Название сети
 NETWORK_NAME="app-network"
 
-# Переменные для директорий
-BACKEND_DIR="backend"
-PYTHON_DIR="python"
-
 # Проверка и создание сети
 create_network_if_not_exists() {
     if ! docker network ls | grep -q "$NETWORK_NAME"; then
@@ -17,26 +13,11 @@ create_network_if_not_exists() {
     fi
 }
 
-# Функция для запуска Docker Compose
-run_docker_compose() {
-    local dir=$1
-    echo "Переключение в директорию: $dir"
-    cd "$dir" || { echo "Не удалось перейти в директорию $dir"; exit 1; }
-    
-    echo "Запуск Docker Compose в $dir..."
-    docker-compose up --build || { echo "Ошибка при запуске Docker Compose в $dir"; exit 1; }
-
-    echo "Возврат в исходную директорию"
-    cd - > /dev/null || exit
-}
-
 # Проверка и создание сети
 create_network_if_not_exists
 
-# Запуск backend
-run_docker_compose "$BACKEND_DIR"
-
-# Запуск python
-run_docker_compose "$PYTHON_DIR"
+# Запуск Docker Compose
+echo "Запуск Docker Compose..."
+docker-compose up --build
 
 echo "Все сервисы запущены!"
