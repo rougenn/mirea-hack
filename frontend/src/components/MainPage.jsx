@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import LatexInput from './Input';
 import Background from './Background';
-import SidePanel from './SidePanel'; 
+import SidePanel from './SidePanel';
 import CreateBaseForm from './CreateBaseForm';
+import Instruction from './Instruction'; // Импорт компонента "Инструкция"
 import 'katex/dist/katex.min.css';
-import defaultBase from './formulas.json'; 
+import defaultBase from './formulas.json';
 import { useNavigate } from 'react-router-dom';
 import ComparisonModal from './ComparisonModal'; // Импортируем ComparisonModal
+import './MainPage.css'
 
 export default function MainPage() {
     const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
     const [customBases, setCustomBases] = useState([]);
     const [selectedBase, setSelectedBase] = useState(null);
-    const [isCreatingBase, setIsCreatingBase] = useState(false); 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreatingBase, setIsCreatingBase] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(true); // Состояние для управления модальным окном
 
     const navigate = useNavigate();
 
@@ -148,8 +150,8 @@ export default function MainPage() {
         }
     }
 
-    const displayedFormulas = selectedBase && selectedBase.table 
-        ? selectedBase.table 
+    const displayedFormulas = selectedBase && selectedBase.table
+        ? selectedBase.table
         : defaultBase.table;
 
     return (
@@ -164,6 +166,12 @@ export default function MainPage() {
                 onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
             >
                 <img src="/assets/basebtn.png" alt="Toggle Side Panel" />
+            </button>
+            <button
+                className="toggle-instruction-button"
+                onClick={() => setIsModalOpen(!isModalOpen)} // Переключение состояния модального окна
+            >
+                💡
             </button>
             <SidePanel
                 isOpen={isSidePanelOpen}
@@ -188,6 +196,16 @@ export default function MainPage() {
                 formulas={displayedFormulas}        // Формулы для сравнения, те что отображаются в данный момент
             />
 
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <button className="close-button-instructions" onClick={() => setIsModalOpen(false)}>
+                            &times; {/* Крестик для закрытия */}
+                        </button>
+                        <Instruction />
+                    </div>
+                </div>
+            )}
         </Background>
     );
 }
