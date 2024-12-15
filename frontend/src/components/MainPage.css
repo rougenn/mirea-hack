@@ -1,0 +1,27 @@
+.toggle-instruction-button{
+    background: linear-gradient(180deg, #003BFF 0%, #192D6D 100%);
+    z-index: 1010;
+}
+.modal {
+    position: fixed; /* Окно фиксируется относительно окна браузера */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Высокий z-index для размещения поверх других элементов */
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+    z-index: 1010; /* Убедитесь, что это выше, чем у фоновых элементов */
+}   
