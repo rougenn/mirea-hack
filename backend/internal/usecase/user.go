@@ -49,7 +49,7 @@ func (uc UserUseCase) SignIn(email, password string) (entity.User, error) {
 
 func (uc UserUseCase) Register(req entity.User) (entity.User, error) {
 	if _, err := uc.store.GetUserByEmail(req.Email); err == nil {
-		// Пользователь найден, значит он уже существует
+		// юзер найден, значит он уже существует
 		return entity.User{}, errors.New("user already exists")
 	}
 
@@ -70,6 +70,7 @@ func (uc UserUseCase) Register(req entity.User) (entity.User, error) {
 
 	user.ID = id
 	user.CreatedAt = createdAt
+	user.Password = "hidden"
 	return user, nil
 }
 
