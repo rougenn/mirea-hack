@@ -243,7 +243,7 @@ const LatexInput = ({ isSidePanelOpen, setIsSidePanelOpen }) => {
                 className="fixed-compare-button"
                 onClick={() => setIsComparisonModalOpen(true)}
             >
-                Сравнить формулы
+                <img src="./handwritingbtn.png" alt="" />
             </button>
 
             {similarFormulas.length > 0 && (

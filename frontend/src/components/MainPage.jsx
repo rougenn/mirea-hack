@@ -24,6 +24,13 @@ export default function MainPage() {
         }
     }, []);
 
+    useEffect(() => {
+        const isFirstVisit = !localStorage.getItem('visited');
+        if (isFirstVisit) {
+            localStorage.setItem('visited', 'true');
+        }
+    }, []);
+
     async function fetchFormulaDBList(token) {
         let response = await fetch('http://localhost:8090/api/formula-db/list', {
             method: 'GET',
@@ -82,7 +89,6 @@ export default function MainPage() {
         }
     }
 
-    // Сохранение новой базы
     const addNewBase = async (newBase) => {
         const token = localStorage.getItem('access_token');
         if (!token) {
@@ -123,7 +129,7 @@ export default function MainPage() {
             return;
         }
 
-        const data = await response.json(); // {"id": "uuid..."}
+        const data = await response.json();
         setCustomBases(prev => [...prev, { ...newBase, id: data.id }]);
         setIsCreatingBase(false);
     };
@@ -138,10 +144,12 @@ export default function MainPage() {
             <LatexInput
                 isSidePanelOpen={isSidePanelOpen}
                 setIsSidePanelOpen={setIsSidePanelOpen}
+                title="Введите LaTeX-формулу для отображения" // Подсказка
             />
             <button
                 className="toggle-side-panel-button"
                 onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
+                title="Открыть/закрыть панель с базами формул" // Подсказка
             >
                 <img src="/assets/basebtn.png" alt="Toggle Side Panel" />
             </button>
@@ -153,12 +161,14 @@ export default function MainPage() {
                 selectedBase={selectedBase}
                 setSelectedBase={setSelectedBase}
                 onCreateBase={() => setIsCreatingBase(true)}
+                title="Панель для выбора и управления базами формул" // Подсказка
             />
             {isCreatingBase && (
                 <CreateBaseForm
                     onAddBase={addNewBase}
                     onClose={() => setIsCreatingBase(false)}
                     initialFormulas={defaultBase.table}
+                    title="Форма для создания новой базы формул" // Подсказка
                 />
             )}
         </Background>

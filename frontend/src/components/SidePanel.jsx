@@ -15,7 +15,7 @@ const SidePanel = ({
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     return (
-        <div className={`side-panel ${isOpen ? 'open' : ''}`}>
+        <div title = {title} className={`side-panel ${isOpen ? 'open' : ''}`}>
             <div className="side-panel-content">
                 <button onClick={onCreateBase}>Создать новую базу</button>
 

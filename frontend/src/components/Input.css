@@ -159,11 +159,12 @@
 }
 
 .fixed-compare-button {
+    width: 70px;
+    height: 30px;
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background: linear-gradient(180deg, #003BFF 0%, #192D6D 100%);
+    bottom: 65px;
+    left: 350px;
+    background: linear-gradient(180deg, #003cff00 0%, #192d6d00 100%);
     color: white;
     border: none;
     border-radius: 5px;
@@ -171,9 +172,11 @@
     font-size: 16px;
     z-index: 1000;
 }
-
+.fixed-compare-button img{
+    width: 110px;
+}
 .fixed-compare-button:hover {
-    background-color: #0056b3;
+    background-color: #0057b304;
 }
 
 .remove-row-button {

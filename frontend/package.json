@@ -18,6 +18,7 @@
     "mathjax-full": "^3.2.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-joyride": "^2.9.3",
     "react-latex-next": "^3.0.0",
     "react-mathjax2": "^0.0.2",
     "react-mathquill": "^1.0.3",
