@@ -205,6 +205,7 @@ const ComparisonModal = ({ isOpen, onClose, formulas }) => {
                                     </div>
                                 ))}
                             </div>
+                            
                             <div className="modal-buttons">
                                 <button className="compare-button" onClick={handleCompareWithDB}>
                                     Сравнить с базой данных
